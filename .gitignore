@@ -1,0 +1,19 @@
+# Xcode
+*.xcodeproj/*
+!*.xcodeproj/project.pbxproj
+!*.xcodeproj/xcshareddata/
+*.xcworkspace/*
+!*.xcworkspace/contents.xcworkspacedata
+.DS_Store
+build/
+DerivedData/
+
+# Swift Package Manager
+.swiftpm/
+
+# CocoaPods
+Pods/
+
+# Keep public directory
+!public/
+!public/**
