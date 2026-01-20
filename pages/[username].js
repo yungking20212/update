@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router'
 import Head from 'next/head'
 import { useEffect, useState } from 'react'
+import { supabase } from '../lib/supabase'
 import styles from '../styles/Profile.module.css'
 
 export default function Profile() {
@@ -8,6 +9,7 @@ export default function Profile() {
   const { username } = router.query
   const [profile, setProfile] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
 
   // Clean username (remove @ if present)
   const cleanUsername = username?.replace('@', '')
@@ -15,14 +17,49 @@ export default function Profile() {
   useEffect(() => {
     if (!cleanUsername) return
 
-    // TODO: Replace with actual Supabase fetch
-    // For now, show static landing page
-    setProfile({
-      username: cleanUsername,
-      displayName: cleanUsername,
-      bio: 'Creator on PRNHub'
-    })
-    setLoading(false)
+    const fetchProfile = async () => {
+      try {
+        setLoading(true)
+        setError(null)
+
+        const { data, error: fetchError } = await supabase
+          .from('profiles')
+          .select('username, display_name, bio, avatar_url')
+          .eq('username', cleanUsername)
+          .single()
+
+        if (fetchError) {
+          // Profile not found - show placeholder
+          setProfile({
+            username: cleanUsername,
+            displayName: cleanUsername,
+            bio: 'Creator on PRNHub',
+            avatarUrl: null
+          })
+        } else {
+          setProfile({
+            username: data.username,
+            displayName: data.display_name || data.username,
+            bio: data.bio || 'Creator on PRNHub',
+            avatarUrl: data.avatar_url
+          })
+        }
+      } catch (err) {
+        console.error('Error fetching profile:', err)
+        setError('Failed to load profile')
+        // Fallback to placeholder
+        setProfile({
+          username: cleanUsername,
+          displayName: cleanUsername,
+          bio: 'Creator on PRNHub',
+          avatarUrl: null
+        })
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchProfile()
   }, [cleanUsername])
 
   if (loading) {
@@ -54,12 +91,23 @@ export default function Profile() {
       <main className={styles.main}>
         <div className={styles.profileCard}>
           <div className={styles.avatar}>
-            <div className={styles.avatarPlaceholder}>
-              {cleanUsername?.charAt(0).toUpperCase()}
-            </div>
+            {profile?.avatarUrl ? (
+              <img 
+                src={profile.avatarUrl} 
+                alt={cleanUsername}
+                className={styles.avatarImage}
+              />
+            ) : (
+              <div className={styles.avatarPlaceholder}>
+                {cleanUsername?.charAt(0).toUpperCase()}
+              </div>
+            )}
           </div>
 
           <h1 className={styles.username}>@{cleanUsername}</h1>
+          {profile?.displayName !== cleanUsername && (
+            <p className={styles.displayName}>{profile?.displayName}</p>
+          )}
           <p className={styles.bio}>{profile?.bio}</p>
 
           <div className={styles.cta}>

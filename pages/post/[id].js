@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router'
 import Head from 'next/head'
 import { useEffect, useState } from 'react'
+import { supabase } from '../../lib/supabase'
 import styles from '../../styles/Post.module.css'
 
 export default function Post() {
@@ -8,18 +9,65 @@ export default function Post() {
   const { id } = router.query
   const [post, setPost] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
 
   useEffect(() => {
     if (!id) return
 
-    // TODO: Replace with actual Supabase fetch
-    // For now, show static landing page
-    setPost({
-      id,
-      caption: 'Check out this amazing post!',
-      username: 'creator'
-    })
-    setLoading(false)
+    const fetchPost = async () => {
+      try {
+        setLoading(true)
+        setError(null)
+
+        const { data, error: fetchError } = await supabase
+          .from('posts')
+          .select(`
+            id,
+            caption,
+            thumbnail_url,
+            video_url,
+            profiles:user_id (
+              username,
+              display_name
+            )
+          `)
+          .eq('id', id)
+          .single()
+
+        if (fetchError) {
+          // Post not found - show placeholder
+          setPost({
+            id,
+            caption: 'Check out this amazing post!',
+            username: 'creator',
+            thumbnailUrl: null
+          })
+        } else {
+          setPost({
+            id: data.id,
+            caption: data.caption || 'Check out this post!',
+            username: data.profiles?.username || 'creator',
+            displayName: data.profiles?.display_name,
+            thumbnailUrl: data.thumbnail_url,
+            videoUrl: data.video_url
+          })
+        }
+      } catch (err) {
+        console.error('Error fetching post:', err)
+        setError('Failed to load post')
+        // Fallback to placeholder
+        setPost({
+          id,
+          caption: 'Check out this amazing post!',
+          username: 'creator',
+          thumbnailUrl: null
+        })
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchPost()
   }, [id])
 
   if (loading) {
@@ -51,6 +99,13 @@ export default function Post() {
       <main className={styles.main}>
         <div className={styles.postCard}>
           <div className={styles.videoPlaceholder}>
+            {post?.thumbnailUrl ? (
+              <img 
+                src={post.thumbnailUrl} 
+                alt={post.caption}
+                className={styles.thumbnail}
+              />
+            ) : null}
             <svg className={styles.playIcon} viewBox="0 0 24 24" fill="currentColor">
               <path d="M8 5v14l11-7z"/>
             </svg>
@@ -58,7 +113,10 @@ export default function Post() {
 
           <div className={styles.content}>
             <p className={styles.caption}>{post?.caption}</p>
-            <p className={styles.creator}>by @{post?.username}</p>
+            <p className={styles.creator}>
+              by @{post?.username}
+              {post?.displayName && ` (${post.displayName})`}
+            </p>
           </div>
 
           <div className={styles.cta}>
