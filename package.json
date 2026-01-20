@@ -1,13 +1,22 @@
 {
-  "name": "prnhub-updates",
+  "name": "prnhub-web",
   "version": "1.0.0",
-  "description": "Static update endpoint for PRNHub app",
+  "description": "PRNHub web landing pages with deep linking support",
   "scripts": {
-    "build": "echo 'No build needed - static files only'",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
     "validate": "node -e \"try { JSON.parse(require('fs').readFileSync('public/update.json', 'utf8')); console.log('✅ update.json is valid JSON'); } catch(e) { console.error('❌ Invalid JSON:', e.message); process.exit(1); }\""
   },
   "dependencies": {
-    "framer-motion": "^10.15.0"
+    "next": "^15.1.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.0",
+    "eslint-config-next": "^15.1.0"
   },
   "private": true
 }
