@@ -25,12 +25,20 @@ export default function Tag() {
           <p className={styles.description}>Explore trending content</p>
 
           <div className={styles.cta}>
-            <a 
-              href={`prnhub://tag/${name}`}
+            <button 
+              onClick={() => {
+                // Try custom scheme first (instant if app installed)
+                window.location.href = `prnhub://tag/${name}`
+                
+                // Fallback to App Store after 2 seconds if app didn't open
+                setTimeout(() => {
+                  window.location.href = 'https://apps.apple.com/app/prnhub'
+                }, 2000)
+              }}
               className={styles.primaryButton}
             >
               Explore in App
-            </a>
+            </button>
             <a 
               href="https://apps.apple.com/app/prnhub"
               className={styles.secondaryButton}

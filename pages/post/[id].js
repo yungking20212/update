@@ -120,12 +120,20 @@ export default function Post() {
           </div>
 
           <div className={styles.cta}>
-            <a 
-              href={`prnhub://post/${id}`}
+            <button 
+              onClick={() => {
+                // Try custom scheme first (instant if app installed)
+                window.location.href = `prnhub://post/${id}`
+                
+                // Fallback to App Store after 2 seconds if app didn't open
+                setTimeout(() => {
+                  window.location.href = 'https://apps.apple.com/app/prnhub'
+                }, 2000)
+              }}
               className={styles.primaryButton}
             >
               Watch in App
-            </a>
+            </button>
             <a 
               href="https://apps.apple.com/app/prnhub"
               className={styles.secondaryButton}

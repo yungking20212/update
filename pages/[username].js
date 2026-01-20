@@ -111,12 +111,20 @@ export default function Profile() {
           <p className={styles.bio}>{profile?.bio}</p>
 
           <div className={styles.cta}>
-            <a 
-              href="prnhub://profile/${cleanUsername}"
+            <button 
+              onClick={() => {
+                // Try custom scheme first (instant if app installed)
+                window.location.href = `prnhub://profile/${cleanUsername}`
+                
+                // Fallback to App Store after 2 seconds if app didn't open
+                setTimeout(() => {
+                  window.location.href = 'https://apps.apple.com/app/prnhub'
+                }, 2000)
+              }}
               className={styles.primaryButton}
             >
               Open in App
-            </a>
+            </button>
             <a 
               href="https://apps.apple.com/app/prnhub"
               className={styles.secondaryButton}

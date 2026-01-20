@@ -74,12 +74,15 @@
 }
 
 .primaryButton {
+  width: 100%;
   padding: 1rem 2rem;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   border-radius: 12px;
   font-weight: 600;
   font-size: 1.1rem;
+  border: none;
+  cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
