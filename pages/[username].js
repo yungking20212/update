@@ -80,12 +80,16 @@ export default function Profile() {
         <meta property="og:title" content={`@${cleanUsername} on PRNHub`} />
         <meta property="og:description" content={profile?.bio || 'Creator on PRNHub'} />
         <meta property="og:type" content="profile" />
-        <meta property="og:url" content={`https://prnhub.app/@${cleanUsername}`} />
+        <meta property="og:url" content={`https://prnhub-jet.vercel.app/@${cleanUsername}`} />
+        {profile?.avatarUrl && <meta property="og:image" content={profile.avatarUrl} />}
+        <meta property="og:image:width" content="400" />
+        <meta property="og:image:height" content="400" />
         
         {/* Twitter Card tags */}
-        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={`@${cleanUsername} on PRNHub`} />
         <meta name="twitter:description" content={profile?.bio || 'Creator on PRNHub'} />
+        {profile?.avatarUrl && <meta name="twitter:image" content={profile.avatarUrl} />}
       </Head>
 
       <main className={styles.main}>

@@ -81,19 +81,24 @@ export default function Post() {
   return (
     <div className={styles.container}>
       <Head>
-        <title>Post on PRNHub</title>
+        <title>{post?.caption || 'Post on PRNHub'}</title>
         <meta name="description" content={post?.caption || 'Check out this post on PRNHub'} />
         
         {/* Open Graph tags */}
-        <meta property="og:title" content="Post on PRNHub" />
-        <meta property="og:description" content={post?.caption || 'Check out this post on PRNHub'} />
+        <meta property="og:title" content={post?.caption || 'Post on PRNHub'} />
+        <meta property="og:description" content={`By @${post?.username} on PRNHub`} />
         <meta property="og:type" content="video.other" />
-        <meta property="og:url" content={`https://prnhub.app/post/${id}`} />
+        <meta property="og:url" content={`https://prnhub-jet.vercel.app/post/${id}`} />
+        {post?.thumbnailUrl && <meta property="og:image" content={post.thumbnailUrl} />}
+        {post?.videoUrl && <meta property="og:video" content={post.videoUrl} />}
+        <meta property="og:image:width" content="720" />
+        <meta property="og:image:height" content="1280" />
         
         {/* Twitter Card */}
-        <meta name="twitter:card" content="player" />
-        <meta name="twitter:title" content="Post on PRNHub" />
-        <meta name="twitter:description" content={post?.caption || 'Check out this post on PRNHub'} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={post?.caption || 'Post on PRNHub'} />
+        <meta name="twitter:description" content={`By @${post?.username} on PRNHub`} />
+        {post?.thumbnailUrl && <meta name="twitter:image" content={post.thumbnailUrl} />}
       </Head>
 
       <main className={styles.main}>
