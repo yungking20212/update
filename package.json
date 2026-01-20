@@ -1,0 +1,13 @@
+{
+  "name": "prnhub-updates",
+  "version": "1.0.0",
+  "description": "Static update endpoint for PRNHub app",
+  "scripts": {
+    "build": "echo 'No build needed - static files only'",
+    "validate": "node -e \"try { JSON.parse(require('fs').readFileSync('public/update.json', 'utf8')); console.log('✅ update.json is valid JSON'); } catch(e) { console.error('❌ Invalid JSON:', e.message); process.exit(1); }\""
+  },
+  "dependencies": {
+    "framer-motion": "^10.15.0"
+  },
+  "private": true
+}

@@ -1,0 +1,15 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "TEAMID.com.prnhub",
+        "paths": [
+          "/profile/*",
+          "/@*",
+          "/post/*"
+        ]
+      }
+    ]
+  }
+}
